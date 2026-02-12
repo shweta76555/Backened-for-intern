@@ -1,0 +1,6 @@
+@backened_for_intern_HostAddress = http://localhost:5052
+
+GET {{backened_for_intern_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
