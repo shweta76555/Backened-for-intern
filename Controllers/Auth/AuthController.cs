@@ -1,8 +1,13 @@
 ﻿using backened_for_intern.Data;
+using backened_for_intern.Interfaces;
 using backened_for_intern.Models;
 using backened_for_intern.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace backened_for_intern.Controllers.Auth
 {
@@ -12,11 +17,14 @@ namespace backened_for_intern.Controllers.Auth
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly IAuthService _authService;
 
-        public AuthController(ApplicationDbContext context)
+        public AuthController(ApplicationDbContext context, IAuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
@@ -42,6 +50,20 @@ namespace backened_for_intern.Controllers.Auth
 
             return Ok(new { message = "User registered successfully" });
         }
+
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto dto)
+        {
+            var token = await _authService.LoginAsync(dto);
+
+            if (token == null)
+                return Unauthorized(new { message = "Invalid email or password" });
+
+            return Ok(new { token });
+        }
+
+
     }
 
 

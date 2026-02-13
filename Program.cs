@@ -1,7 +1,11 @@
-
 using backened_for_intern.Data;
+using backened_for_intern.Interfaces;
+using backened_for_intern.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Text;
 
 namespace backened_for_intern
 {
@@ -9,14 +13,30 @@ namespace backened_for_intern
     {
         public static void Main(string[] args)
         {
+
+            Console.WriteLine("project started");
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                         options.UseSqlServer(builder.Configuration.GetConnectionString("Conn")));// connection string app setting   
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
 
-
+            // Add Authentication
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                    ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
+                };
+            });
 
 
             builder.Services.AddControllers();
@@ -35,6 +55,7 @@ namespace backened_for_intern
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

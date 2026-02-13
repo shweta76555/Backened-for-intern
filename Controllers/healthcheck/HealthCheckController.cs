@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backened_for_intern.Controllers.healthcheck
 {
     [Route("api/[controller]")]
     [ApiController]
+     
     public class HealthCheckController : ControllerBase
     {
 
