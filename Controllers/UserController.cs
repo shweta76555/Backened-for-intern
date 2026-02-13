@@ -14,6 +14,7 @@ namespace backened_for_intern.Controllers
 
 
         [HttpGet("profile")]
+    
         public IActionResult GetProfile()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -28,5 +29,21 @@ namespace backened_for_intern.Controllers
                 role
             });
         }
+
+        
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin-data")]
+        public IActionResult GetAdminData()
+        {
+            return Ok(new
+            {
+                message = "Welcome Admin! You have special access."
+            });
+        }
+
+
+
     }
+
+
 }
