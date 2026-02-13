@@ -11,7 +11,9 @@ using System.Text;
 
 namespace backened_for_intern.Controllers.Auth
 {
-    [Route("api/v1/auth")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+
     [ApiController]
     public class AuthController : ControllerBase
     {

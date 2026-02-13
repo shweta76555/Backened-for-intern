@@ -6,7 +6,9 @@ using System.Security.Claims;
 namespace backened_for_intern.Controllers
 {
 
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+
     [ApiController]
     [Authorize]  // 🔐 Ye protect karega
     public class UserController : ControllerBase
