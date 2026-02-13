@@ -60,7 +60,13 @@ namespace backened_for_intern.Controllers.Auth
             if (token == null)
                 return Unauthorized(new { message = "Invalid email or password" });
 
-            return Ok(new { token });
+            // return Ok(new { token });
+
+            return Ok(new
+            {
+                message = "User Login successful",
+                token = token
+            });
         }
 
 

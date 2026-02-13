@@ -20,6 +20,7 @@ namespace backened_for_intern
             // Add services to the container.
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                         options.UseSqlServer(builder.Configuration.GetConnectionString("Conn")));// connection string app setting   
+            
             builder.Services.AddScoped<IAuthService, AuthService>();
 
 
