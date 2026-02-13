@@ -2,22 +2,15 @@
 using backened_for_intern.Interfaces;
 using backened_for_intern.Models;
 using backened_for_intern.Models.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
-namespace backened_for_intern.Controllers.Auth
+namespace backened_for_intern.Controllers
 {
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-
-    [ApiController]
     public class AuthController : ControllerBase
     {
-
         private readonly ApplicationDbContext _context;
         private readonly IAuthService _authService;
 
@@ -27,24 +20,29 @@ namespace backened_for_intern.Controllers.Auth
             _authService = authService;
         }
 
-
+        //  REGISTER
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            // Check if email already exists
-            if (_context.Users.Any(u => u.Email == dto.Email))
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            dto.Email = dto.Email.Trim();
+            dto.Name = dto.Name.Trim();
+
+            if (_context.Users.Any(u => u.Email.ToLower() == dto.Email.ToLower()))
             {
                 return BadRequest(new { message = "Email already exists" });
             }
 
-            // Hash password
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             var user = new User
             {
                 Name = dto.Name,
                 Email = dto.Email,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                Role = "User"
             };
 
             _context.Users.Add(user);
@@ -53,28 +51,23 @@ namespace backened_for_intern.Controllers.Auth
             return Ok(new { message = "User registered successfully" });
         }
 
-
+        //  LOGIN
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var token = await _authService.LoginAsync(dto);
 
             if (token == null)
                 return Unauthorized(new { message = "Invalid email or password" });
 
-            // return Ok(new { token });
-
             return Ok(new
             {
-                message = "User Login successful",
+                message = "User login successful",
                 token = token
             });
         }
-
-
     }
-
-
-
 }
-
