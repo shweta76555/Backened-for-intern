@@ -27,12 +27,20 @@ namespace backened_for_intern.Controllers
         }
 
         // Get All
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        //[HttpGet]
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    var items = await _service.GetAll();
+        //    return Ok(items);
+        //}
+
+
+        [HttpGet("test-error")]
+        public IActionResult TestError()
         {
-            var items = await _service.GetAll();
-            return Ok(items);
+            throw new Exception("This is a test exception");
         }
+
 
         // Get By Id
         [HttpGet("{id}")]

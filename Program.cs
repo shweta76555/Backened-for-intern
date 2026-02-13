@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using backened_for_intern.Middlewares;
 
 namespace backened_for_intern
 {
@@ -55,6 +56,8 @@ namespace backened_for_intern
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            app.UseMiddleware<ExceptionMiddleware>();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
