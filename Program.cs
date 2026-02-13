@@ -22,6 +22,7 @@ namespace backened_for_intern
                         options.UseSqlServer(builder.Configuration.GetConnectionString("Conn")));// connection string app setting   
             
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IProjectItemService, ProjectItemService>();
 
 
             // Add Authentication

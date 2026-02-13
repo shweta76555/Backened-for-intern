@@ -13,8 +13,10 @@ namespace backened_for_intern.Data
             }
 
             public DbSet<User> Users { get; set; }
-        }
-
+        public DbSet<ProjectItem> ProjectItems { get; set; }
 
     }
+
+
+}
 
